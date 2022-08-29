@@ -369,7 +369,6 @@ class RedisMixin(object):
 
         logger.debug('Setting up redis with rdb file: %s', self.dbfilename)
         logger.debug('Setting up redis with socket file: %s', self.socket_file)
-        atexit.register(self._cleanup, sys.modules.copy())
         if self._is_redis_running() and not self.socket_file:
             self._load_setting_registry()
             logger.debug(
@@ -390,7 +389,7 @@ class RedisMixin(object):
         logger.debug('Calling binding with %s, %s', args, kwargs)
         # noinspection PyArgumentList
         super(RedisMixin, self).__init__(*args, **kwargs)  # pragma: no cover
-
+        atexit.register(self._cleanup, sys.modules.copy())
         logger.debug("Pinging the server to ensure we're connected")
         self._wait_for_server_start()
 
